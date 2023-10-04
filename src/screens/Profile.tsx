@@ -1,5 +1,12 @@
 import React from "react";
-import { Image, StatusBar, StyleSheet, Text, View } from "react-native";
+import {
+  Image,
+  ScrollView,
+  StatusBar,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 import { useSelector } from "react-redux";
 
 import ProgressBar from "react-native-progress/Bar";
@@ -37,128 +44,133 @@ function Profile({ navigation, route }: RootStackScreenProps<Routes.Profile>) {
   return (
     <SafeAreaView style={styles.safeareaView}>
       <StatusBar barStyle="dark-content" backgroundColor={colors.darkGreen} />
-      <View style={styles.profileContainer}>
-        <Text style={styles.commonText}>{strings.myProfile}</Text>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{ paddingBottom: 50 }}
+      >
+        <View style={styles.profileContainer}>
+          <Text style={styles.commonText}>{strings.myProfile}</Text>
 
-        <View style={styles.profileDetailMainContainer}>
-          <Image
-            source={user?.pictures ? { uri: user?.pictures } : Avatar}
-            style={styles.badgesImage}
-          />
-          <View style={styles.profileDetailContainer}>
-            <Text style={styles.nameText}>
-              {user?.first_name + " " + user?.last_name}
-            </Text>
-            <Text style={styles.usernameText}>{user?.username}</Text>
-            <ProgressBar
-              progress={0.7}
-              width={300}
-              height={10}
-              borderRadius={20}
-              borderWidth={2}
-              borderColor={colors.black30}
-              color={colors.royalBlue}
-              style={{
-                marginTop: 12,
-                width: "100%",
-              }}
+          <View style={styles.profileDetailMainContainer}>
+            <Image
+              source={user?.pictures ? { uri: user?.pictures } : Avatar}
+              style={styles.badgesImage}
             />
-            <View style={styles.profileCompletionContainer}>
-              <Text style={styles.profileCompletionText}>
-                80% {strings.profileCompletion}
+            <View style={styles.profileDetailContainer}>
+              <Text style={styles.nameText}>
+                {user?.first_name + " " + user?.last_name}
               </Text>
-              <Image
-                source={Completion}
-                style={styles.profileCompletionImage}
+              <Text style={styles.usernameText}>{user?.username}</Text>
+              <ProgressBar
+                progress={0.7}
+                width={300}
+                height={10}
+                borderRadius={20}
+                borderWidth={2}
+                borderColor={colors.black30}
+                color={colors.royalBlue}
+                style={{
+                  marginTop: 12,
+                  width: "100%",
+                }}
               />
+              <View style={styles.profileCompletionContainer}>
+                <Text style={styles.profileCompletionText}>
+                  80% {strings.profileCompletion}
+                </Text>
+                <Image
+                  source={Completion}
+                  style={styles.profileCompletionImage}
+                />
+              </View>
             </View>
           </View>
         </View>
-      </View>
-      <View style={styles.profileVerifyMainContainer}>
-        <View style={styles.profileVerifyContainer}>
-          <Image source={Email} style={styles.verifyImage} />
-          <Text style={styles.verifyCommonText}>{strings.verifyEmail}</Text>
-        </View>
-        <View style={styles.profileVerifyContainer}>
-          <Image source={Phone} style={styles.verifyImage} />
-          <Text style={styles.verifyCommonText}>
-            {strings.verifyPhoneNumber}
-          </Text>
-        </View>
+        <View style={styles.profileVerifyMainContainer}>
+          <View style={styles.profileVerifyContainer}>
+            <Image source={Email} style={styles.verifyImage} />
+            <Text style={styles.verifyCommonText}>{strings.verifyEmail}</Text>
+          </View>
+          <View style={styles.profileVerifyContainer}>
+            <Image source={Phone} style={styles.verifyImage} />
+            <Text style={styles.verifyCommonText}>
+              {strings.verifyPhoneNumber}
+            </Text>
+          </View>
 
-        <View style={styles.profileVerifyContainer}>
-          <Image source={User} style={styles.verifyImage} />
-          <Text style={styles.verifyCommonText}>{strings.viewProfile}</Text>
-        </View>
-      </View>
-      <View style={styles.divider} />
-
-      <View style={styles.commonContainer}>
-        <Text style={styles.commonText}>{strings.myContributions}</Text>
-        <View style={styles.contributionContainer}>
-          <View style={styles.contributionItemContainer}>
-            <Text style={styles.unlockText}>
-              {user?._embedded?.aggregations?.count_reviews ?? 0}
-            </Text>
-            <Text style={styles.contributionItemTitleText}>
-              {strings.surveys}
-            </Text>
-            <Image source={Surveys} style={styles.contributionImage} />
-          </View>
-          <View style={styles.contributionItemContainer}>
-            <Text style={styles.unlockText}>
-              {user?._embedded?.aggregations?.count_images ?? 0}
-            </Text>
-            <Text style={styles.contributionItemTitleText}>
-              {strings.pictures}
-            </Text>
-            <Image source={Picture} style={styles.contributionImage} />
-          </View>
-          <View style={styles.contributionItemContainer}>
-            <Text style={styles.unlockText}>
-              {user?._embedded?.aggregations?.count_videos ?? 0}
-            </Text>
-            <Text style={styles.contributionItemTitleText}>
-              {strings.videos}
-            </Text>
-            <Image source={Videos} style={styles.contributionImage} />
+          <View style={styles.profileVerifyContainer}>
+            <Image source={User} style={styles.verifyImage} />
+            <Text style={styles.verifyCommonText}>{strings.viewProfile}</Text>
           </View>
         </View>
-      </View>
-      <View style={styles.divider} />
+        <View style={styles.divider} />
 
-      <View style={styles.commonContainer}>
-        <Text style={styles.commonText}>{strings.myBadges}</Text>
-        <Text style={styles.unlockText}>{strings.unlockBadges}</Text>
-
-        <View style={styles.badgesContainer}>
-          <View style={styles.badgesItemContainer}>
-            <Image source={Survery} style={styles.badgesImage} />
-            <Text style={styles.unlockText}>{strings.surveys}</Text>
-          </View>
-          <View style={styles.badgesItemContainer}>
-            <Image source={Polls} style={styles.badgesImage} />
-            <Text style={styles.unlockText}>{strings.polls}</Text>
-          </View>
-          <View style={styles.badgesItemContainer}>
-            <Image source={Photos} style={styles.badgesImage} />
-            <Text style={styles.unlockText}>{strings.pictures}</Text>
-          </View>
-          <View style={styles.badgesItemContainer}>
-            <Image source={Play} style={styles.badgesImage} />
-            <Text style={styles.unlockText}>{strings.videos}</Text>
+        <View style={styles.commonContainer}>
+          <Text style={styles.commonText}>{strings.myContributions}</Text>
+          <View style={styles.contributionContainer}>
+            <View style={styles.contributionItemContainer}>
+              <Text style={styles.unlockText}>
+                {user?._embedded?.aggregations?.count_reviews ?? 0}
+              </Text>
+              <Text style={styles.contributionItemTitleText}>
+                {strings.surveys}
+              </Text>
+              <Image source={Surveys} style={styles.contributionImage} />
+            </View>
+            <View style={styles.contributionItemContainer}>
+              <Text style={styles.unlockText}>
+                {user?._embedded?.aggregations?.count_images ?? 0}
+              </Text>
+              <Text style={styles.contributionItemTitleText}>
+                {strings.pictures}
+              </Text>
+              <Image source={Picture} style={styles.contributionImage} />
+            </View>
+            <View style={styles.contributionItemContainer}>
+              <Text style={styles.unlockText}>
+                {user?._embedded?.aggregations?.count_videos ?? 0}
+              </Text>
+              <Text style={styles.contributionItemTitleText}>
+                {strings.videos}
+              </Text>
+              <Image source={Videos} style={styles.contributionImage} />
+            </View>
           </View>
         </View>
-      </View>
-      <View style={styles.divider} />
-      <CustomButton
-        onPress={() => setIsAuthenticated(false, true)}
-        title="Logout"
-        textStyle={styles.logoutButtonText}
-        button={styles.logoutButton}
-        buttonViewStyle={styles.logoutButtonView}
-      />
+        <View style={styles.divider} />
+
+        <View style={styles.commonContainer}>
+          <Text style={styles.commonText}>{strings.myBadges}</Text>
+          <Text style={styles.unlockText}>{strings.unlockBadges}</Text>
+
+          <View style={styles.badgesContainer}>
+            <View style={styles.badgesItemContainer}>
+              <Image source={Survery} style={styles.badgesImage} />
+              <Text style={styles.unlockText}>{strings.surveys}</Text>
+            </View>
+            <View style={styles.badgesItemContainer}>
+              <Image source={Polls} style={styles.badgesImage} />
+              <Text style={styles.unlockText}>{strings.polls}</Text>
+            </View>
+            <View style={styles.badgesItemContainer}>
+              <Image source={Photos} style={styles.badgesImage} />
+              <Text style={styles.unlockText}>{strings.pictures}</Text>
+            </View>
+            <View style={styles.badgesItemContainer}>
+              <Image source={Play} style={styles.badgesImage} />
+              <Text style={styles.unlockText}>{strings.videos}</Text>
+            </View>
+          </View>
+        </View>
+        <View style={styles.divider} />
+        <CustomButton
+          onPress={() => setIsAuthenticated(false, true)}
+          title="Logout"
+          textStyle={styles.logoutButtonText}
+          button={styles.logoutButton}
+          buttonViewStyle={styles.logoutButtonView}
+        />
+      </ScrollView>
     </SafeAreaView>
   );
 }
@@ -216,7 +228,7 @@ const styles = StyleSheet.create({
   },
   profileVerifyMainContainer: {
     flexDirection: "row",
-    marginHorizontal: 10,
+    marginHorizontal: 7,
     marginTop: 20,
   },
   profileVerifyContainer: {
@@ -225,7 +237,7 @@ const styles = StyleSheet.create({
     paddingVertical: 13,
     borderWidth: 1,
     justifyContent: "center",
-    marginHorizontal: 5,
+    marginHorizontal: 3,
     borderColor: colors.border,
     backgroundColor: colors.app.secondary,
     borderRadius: 5,
@@ -253,12 +265,11 @@ const styles = StyleSheet.create({
   },
   badgesContainer: {
     flexDirection: "row",
-    marginHorizontal: 10,
     marginTop: 30,
   },
   badgesItemContainer: {
     alignItems: "center",
-    marginEnd: 40,
+    marginEnd: 30,
   },
   badgesImage: {
     height: 45,
