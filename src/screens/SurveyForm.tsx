@@ -1,5 +1,5 @@
 import { format } from "date-fns";
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   FlatList,
   Image,
@@ -22,6 +22,7 @@ import DatePickerDialog from "../components/DatePickerDialog";
 import DropdownView from "../components/DropdownView";
 import Loader from "../components/Loader";
 import RadioButtonList from "../components/RadioButtonList";
+import RankingCriteria from "../components/RankingCriteria";
 import RatingBar from "../components/RatingBar";
 import Scale from "../components/Scale";
 import { showErrorMessage } from "../components/Toast";
@@ -35,12 +36,24 @@ import {
   QuestionData,
   QuestionObject,
   selectRoot,
-  updateSurvey,
   updateSurveyPoints,
 } from "../redux/root/rootSlice";
 
 /* To check the text is html or not */
 const isHTML = (text: string) => /<\/?[a-z][\s\S]*>/i.test(text);
+
+/* To check answer response type */
+
+const checkAnswerResponseType = (value: any) => {
+  if (typeof value === "string") {
+    return "string";
+  }
+  if (Array.isArray(value)) {
+    return "array";
+  } else {
+    return "object";
+  }
+};
 
 function SurveyForm({
   navigation,
@@ -50,7 +63,8 @@ function SurveyForm({
   const uid = route.params.uid;
   const { isLoading, surveys, user, isSurveySubmitted, error } =
     useSelector(selectRoot);
-  const refInputs = useRef<string[]>([""]);
+  const refInputs = useRef<any[]>([]);
+  const [update, setUpdate] = useState(false);
 
   useEffect(() => {
     dispatch(fetchSurvey(uid));
@@ -98,61 +112,50 @@ function SurveyForm({
       return (
         <CheckboxGrid
           onChange={(answer, id) => {
-            dispatch(
-              updateSurvey({
-                userResponseStr: answer,
-                userResponseQuestionId: id,
-                userResponseArr: [],
-                id: item?.id,
-                originAnswer: item?.originAnswer,
-                parentQuetionId: parentQuetionId,
-              })
-            );
+            const inputs = refInputs?.current;
+            inputs[item.id] = { answer: answer, id: id };
+            setUpdate(!update);
           }}
           data={item?.question?.answers ?? []}
-          selected={item?.userResponseStr ? [item?.userResponseStr] : []}
+          selected={refInputs?.current[item?.id]?.answer ?? ""}
         />
       );
     } else if (item?.question?.answer_type === "rankingOfCriteria") {
       return (
-        <CheckboxGrid
+        <RankingCriteria
           onChange={(answer, id) => {
-            var list = item?.userResponseArr?.slice() ?? [];
-            if (list.includes(answer)) {
-              list = list.filter((ans) => ans !== answer);
+            let inputs = refInputs?.current;
+
+            if (
+              inputs[item.id] &&
+              inputs[item.id]?.length > 0 &&
+              inputs[item.id]?.filter(
+                (ans: { id: number; answer: string }) => ans?.id === id
+              )?.length > 0
+            ) {
+              inputs[item.id] = inputs[item.id]?.filter(
+                (ans: { id: number; answer: string }) => ans?.id !== id
+              );
             } else {
-              list.push(answer);
+              inputs[item.id] = [
+                ...(inputs[item.id] ?? []),
+                { answer: answer, id: id },
+              ];
             }
-            dispatch(
-              updateSurvey({
-                userResponseStr: undefined,
-                userResponseQuestionId: id,
-                userResponseArr: list,
-                id: item?.id,
-                originAnswer: item?.originAnswer,
-                parentQuetionId: parentQuetionId,
-              })
-            );
+            setUpdate(!update);
           }}
           data={item?.question?.answers ?? []}
-          selected={item?.userResponseArr ?? []}
+          selected={refInputs?.current[item.id] ?? []}
         />
       );
     } else if (item?.question?.answer_type === "date") {
       return (
         <DatePickerDialog
-          selectedDate={item.userResponseStr ?? ""}
+          selectedDate={refInputs?.current[item.id] ?? ""}
           onChange={(date) => {
-            dispatch(
-              updateSurvey({
-                userResponseStr: format(date, "dd/MM/yyyy"),
-                userResponseQuestionId: undefined,
-                userResponseArr: [],
-                id: item?.id,
-                originAnswer: item?.originAnswer,
-                parentQuetionId: parentQuetionId,
-              })
-            );
+            const inputs = refInputs?.current;
+            inputs[item.id] = format(date, "dd/MM/yyyy");
+            setUpdate(!update);
           }}
         />
       );
@@ -160,37 +163,23 @@ function SurveyForm({
       return (
         <RadioButtonList
           onChange={(answer, id) => {
-            dispatch(
-              updateSurvey({
-                userResponseStr: answer,
-                userResponseQuestionId: id,
-                userResponseArr: [],
-                id: item?.id,
-                originAnswer: item?.originAnswer,
-                parentQuetionId: parentQuetionId,
-              })
-            );
+            const inputs = refInputs?.current;
+            inputs[item.id] = { answer: answer, id: id };
+            setUpdate(!update);
           }}
           data={item?.question?.answers ?? []}
-          selected={item?.userResponseStr ?? ""}
+          selected={refInputs?.current[item?.id]?.answer ?? ""}
         />
       );
     } else if (item?.question?.answer_type === "select") {
       return (
         <DropdownView
           onChangeText={(text, id) => {
-            dispatch(
-              updateSurvey({
-                userResponseStr: text,
-                userResponseQuestionId: id,
-                userResponseArr: [],
-                id: item?.id,
-                originAnswer: item?.originAnswer,
-                parentQuetionId: parentQuetionId,
-              })
-            );
+            const inputs = refInputs?.current;
+            inputs[item.id] = { answer: text, id: id };
+            setUpdate(!update);
           }}
-          placeholder={item?.userResponseStr ?? "Select"}
+          placeholder={refInputs?.current[item?.id]?.answer ?? "Select"}
           data={item?.question?.answers ?? []}
           selectedTextStyle={{
             color: colors.text.title,
@@ -221,7 +210,6 @@ function SurveyForm({
         <CustomInput
           defaultValue={refInputs?.current[item?.id] ?? ""}
           placeholder="Enter url"
-          value={item?.userResponseStr}
           inputContainer={{ backgroundColor: colors.backgroundInput }}
           onChangeText={(text) => {
             const inputs = refInputs?.current;
@@ -232,18 +220,11 @@ function SurveyForm({
     } else if (item?.question?.answer_type === "rating") {
       return (
         <RatingBar
-          rating={item?.userResponseStr ?? ""}
+          rating={refInputs?.current[item?.id] ?? ""}
           onChange={(rating) => {
-            dispatch(
-              updateSurvey({
-                userResponseStr: rating.toString(),
-                userResponseQuestionId: undefined,
-                userResponseArr: [],
-                id: item?.id,
-                originAnswer: item?.originAnswer,
-                parentQuetionId: parentQuetionId,
-              })
-            );
+            const inputs = refInputs?.current;
+            inputs[item.id] = rating.toString();
+            setUpdate(!update);
           }}
         />
       );
@@ -251,18 +232,11 @@ function SurveyForm({
       return (
         <DropdownView
           onChangeText={(text, id) => {
-            dispatch(
-              updateSurvey({
-                userResponseStr: text,
-                userResponseQuestionId: id,
-                userResponseArr: [],
-                id: item?.id,
-                originAnswer: item?.originAnswer,
-                parentQuetionId: parentQuetionId,
-              })
-            );
+            const inputs = refInputs?.current;
+            inputs[item.id] = { answer: text, id: id };
+            setUpdate(!update);
           }}
-          placeholder={item?.userResponseStr ?? "Select"}
+          placeholder={refInputs?.current[item?.id]?.answer ?? "Select"}
           data={item?.question?.checklist_grid ?? []}
           selectedTextStyle={{
             color: colors.text.title,
@@ -281,18 +255,11 @@ function SurveyForm({
       return (
         <Scale
           maximumValue={5}
-          value={item?.userResponseStr ?? ""}
+          value={refInputs?.current[item?.id] ?? ""}
           onChange={(value) => {
-            dispatch(
-              updateSurvey({
-                userResponseStr: value.toString(),
-                userResponseQuestionId: undefined,
-                userResponseArr: [],
-                id: item?.id,
-                originAnswer: item?.originAnswer,
-                parentQuetionId: parentQuetionId,
-              })
-            );
+            const inputs = refInputs?.current;
+            inputs[item.id] = value;
+            setUpdate(!update);
           }}
         />
       );
@@ -300,18 +267,11 @@ function SurveyForm({
       return (
         <Scale
           maximumValue={10}
-          value={item?.userResponseStr ?? ""}
+          value={refInputs?.current[item?.id] ?? ""}
           onChange={(value) => {
-            dispatch(
-              updateSurvey({
-                userResponseStr: value.toString(),
-                userResponseQuestionId: undefined,
-                userResponseArr: [],
-                id: item?.id,
-                originAnswer: item?.originAnswer,
-                parentQuetionId: parentQuetionId,
-              })
-            );
+            const inputs = refInputs?.current;
+            inputs[item.id] = value;
+            setUpdate(!update);
           }}
         />
       );
@@ -321,11 +281,11 @@ function SurveyForm({
   };
   const getSubQuestions = (item: QuestionData) => {
     var list: QuestionObject[] = [];
-    if (item?.children && item?.userResponseQuestionId) {
+    if (item?.children && refInputs?.current[item?.id]) {
       Object.entries(item?.children).map(([key, value], index) => {
         if (
-          item?.userResponseQuestionId &&
-          key == item?.userResponseQuestionId.toString()
+          refInputs?.current[item?.id]?.id &&
+          key == refInputs?.current[item?.id]?.id?.toString()
         ) {
           list = value;
         }
@@ -424,39 +384,19 @@ function SurveyForm({
     var isValidate = true;
     for (let i of surveys) {
       if (i.required) {
-        if (i?.children && i.userResponseQuestionId) {
-          if (
-            i.question.answer_type === "text" ||
-            i.question.answer_type === "textarea" ||
-            i.question.answer_type === "url" ||
-            i.question.answer_type === "social username" ||
-            i.question.answer_type === "numeric"
-          ) {
-            if (!refInputs.current[i.id]) {
-              isValidate = false;
-            }
-          } else if (!i.userResponseStr || !i.userResponseArr) {
+        if (i?.children && refInputs?.current[i?.id]?.id) {
+          if (!refInputs.current[i.id]) {
             isValidate = false;
           } else {
-            i?.children[i?.userResponseQuestionId]?.map((item) => {
+            i?.children[refInputs?.current[i?.id]?.id]?.map((item) => {
               if (item?.required) {
-                if (
-                  item.question.answer_type === "text" ||
-                  item.question.answer_type === "textarea" ||
-                  item.question.answer_type === "url" ||
-                  item.question.answer_type === "social username" ||
-                  item.question.answer_type === "numeric"
-                ) {
-                  if (!refInputs.current[item.id]) {
-                    isValidate = false;
-                  }
-                } else if (!item.userResponseStr || !item.userResponseArr) {
+                if (!refInputs.current[item.id]) {
                   isValidate = false;
                 }
               }
             });
           }
-        } else if (!i.userResponseStr || !i.userResponseArr) {
+        } else if (!refInputs?.current[i?.id]) {
           isValidate = false;
         } else {
           isValidate = true;
@@ -483,13 +423,7 @@ function SurveyForm({
     var formObject: { [key: string]: any } = {};
     for (let i of surveys) {
       if (i?.children) {
-        if (
-          i.question.answer_type === "text" ||
-          i.question.answer_type === "textarea" ||
-          i.question.answer_type === "url" ||
-          i.question.answer_type === "social username" ||
-          i.question.answer_type === "numeric"
-        ) {
+        if (checkAnswerResponseType(refInputs.current[i.id]) === "string") {
           if (refInputs.current[i.id]) {
             var objectKey = "question_" + i.id.toString();
             formObject = {
@@ -497,24 +431,34 @@ function SurveyForm({
               [objectKey]: refInputs.current[i.id],
             };
           }
-        } else if (i.userResponseStr || i.userResponseArr) {
-          var objectKey = "question_" + i.id.toString();
-          formObject = {
-            ...formObject,
-            [objectKey]: i.userResponseStr
-              ? i.userResponseStr
-              : i.userResponseArr,
-          };
+        } else if (
+          checkAnswerResponseType(refInputs.current[i.id]) === "object"
+        ) {
+          if (refInputs.current[i.id]) {
+            var objectKey = "question_" + i.id.toString();
+            formObject = {
+              ...formObject,
+              [objectKey]: refInputs.current[i.id]?.answer,
+            };
+          }
+        } else if (
+          checkAnswerResponseType(refInputs.current[i.id]) === "array"
+        ) {
+          if (refInputs.current[i.id]) {
+            var objectKey = "question_" + i.id.toString();
+            formObject = {
+              ...formObject,
+              [objectKey]: refInputs.current[i.id]?.map(
+                (ans: { answer: string }) => ans?.answer
+              ),
+            };
+          }
         }
 
-        if (i?.userResponseQuestionId) {
-          i?.children[i?.userResponseQuestionId]?.map((item) => {
+        if (refInputs?.current[i.id]?.id) {
+          i?.children[refInputs?.current[i.id]?.id]?.map((item) => {
             if (
-              item.question.answer_type === "text" ||
-              item.question.answer_type === "textarea" ||
-              item.question.answer_type === "url" ||
-              item.question.answer_type === "social username" ||
-              item.question.answer_type === "numeric"
+              checkAnswerResponseType(refInputs.current[item.id]) === "string"
             ) {
               if (refInputs.current[item.id]) {
                 var objectKey = "subquestion_" + item.id.toString();
@@ -523,23 +467,29 @@ function SurveyForm({
                   [objectKey]: refInputs.current[item.id],
                 };
               }
-            } else if (item.userResponseStr || item.userResponseArr) {
+            } else if (
+              checkAnswerResponseType(refInputs.current[i.id]) === "object"
+            ) {
               var objectKey = "subquestion_" + item.id.toString();
               formObject = {
                 ...formObject,
-                [objectKey]: item.userResponseStr
-                  ? item.userResponseStr
-                  : item.userResponseArr,
+                [objectKey]: refInputs.current[item.id]?.answer,
+              };
+            } else if (
+              checkAnswerResponseType(refInputs.current[i.id]) === "array"
+            ) {
+              var objectKey = "subquestion_" + item.id.toString();
+              formObject = {
+                ...formObject,
+                [objectKey]: refInputs.current[item.id]?.map(
+                  (ans: { answer: string }) => ans?.answer
+                ),
               };
             }
           });
         }
       } else if (
-        i.question.answer_type === "text" ||
-        i.question.answer_type === "textarea" ||
-        i.question.answer_type === "url" ||
-        i.question.answer_type === "social username" ||
-        i.question.answer_type === "numeric"
+        checkAnswerResponseType(refInputs.current[i.id]) === "string"
       ) {
         if (refInputs.current[i.id]) {
           var objectKey = "question_" + i.id.toString();
@@ -548,34 +498,40 @@ function SurveyForm({
             [objectKey]: refInputs.current[i.id],
           };
         }
-      } else if (i.userResponseStr || i.userResponseArr) {
-        var objectKey = "question_" + i.id.toString();
-        formObject = {
-          ...formObject,
-          [objectKey]: i.userResponseStr
-            ? i.userResponseStr
-            : i.userResponseArr,
-        };
+      } else if (
+        checkAnswerResponseType(refInputs.current[i.id]) === "object"
+      ) {
+        if (refInputs.current[i.id]) {
+          var objectKey = "question_" + i.id.toString();
+          formObject = {
+            ...formObject,
+            [objectKey]: refInputs.current[i.id]?.answer,
+          };
+        }
+      } else if (checkAnswerResponseType(refInputs.current[i.id]) === "array") {
+        if (refInputs.current[i.id]) {
+          var objectKey = "question_" + i.id.toString();
+          formObject = {
+            ...formObject,
+            [objectKey]: refInputs.current[i.id]?.map(
+              (ans: { answer: string }) => ans?.answer
+            ),
+          };
+        }
       }
     }
-
     dispatch(
       submitSurveyForm(
         {
           participation_form: formObject,
           address_verification_user: {
-            birthday: user?.birth_day,
-            parentAuthorization: "on",
-            address: user?.address,
-            additionalAddress: user?.additional_address,
-            postalCode: user?.postal_code,
-            city: user?.city,
-            state: user?.state,
-            district: user?.district,
-            subdistrict: user?.subdistrict,
-            province: user?.province,
-            country: user?.country,
-            phone: user?.phone,
+            birthday: "09/02/1988",
+            address: "7 Lorong 27A* Geylang",
+            postalCode: 225631,
+            city: "singapore",
+            state: "singapore",
+            country: "Singapore",
+            phone: "9824986961",
             email: user?.email,
           },
         },

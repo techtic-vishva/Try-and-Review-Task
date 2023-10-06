@@ -22,9 +22,6 @@ export type QuestionObject = {
     question: Question,
     parent_id: number
     originAnswer: number
-    userResponseStr: string | undefined
-    userResponseQuestionId: number | undefined
-    userResponseArr: string[] | undefined,
 }
 export type QuestionData = QuestionObject & {
     children?: { [key: string]: QuestionObject[] } | undefined
@@ -129,43 +126,7 @@ const rootSlice = createSlice({
             state.isLoading = false;
             state.error = action.payload;
         },
-        updateSurvey: (state, action: PayloadAction<Partial<QuestionData & { parentQuetionId: number }>>) => {
-            const { parentQuetionId, userResponseStr, userResponseQuestionId, userResponseArr, id, originAnswer
-            } = action.payload;
 
-            const originalAnswerId = originAnswer
-
-            if (originalAnswerId) {
-                /* To update the survey sub question according to user response */
-
-                const itemIndex = state.surveys.findIndex((item) => item.id === parentQuetionId);
-
-                if (itemIndex !== -1) {
-
-                    const item = state.surveys[itemIndex];
-                    const updatedDetails = { ...item?.children };
-                    const childIndex = updatedDetails[originalAnswerId].findIndex((item) => item.id === id);
-
-                    updatedDetails[originalAnswerId.toString()][childIndex] = { ...updatedDetails[originalAnswerId.toString()][childIndex], userResponseArr: userResponseArr, userResponseQuestionId: userResponseQuestionId, userResponseStr: userResponseStr };
-
-                    const updatedItems = state.surveys.map((item) =>
-                        item.id === state.surveys[itemIndex].id ? { ...item, children: updatedDetails } : item
-                    );
-
-                    state.surveys = updatedItems;
-                }
-
-            } else {
-                /* To update the survey question according to user response */
-
-                const updatedItems = state.surveys.map((item) =>
-                    item.id === id ? { ...item, userResponseArr: userResponseArr, userResponseQuestionId: userResponseQuestionId, userResponseStr: userResponseStr } : item
-                );
-                state.surveys = updatedItems;
-            }
-
-
-        },
         updateSurveyPoints: (state, action: PayloadAction<number>) => {
             /* To update the survey points */
             state.surveyPoints += action.payload
@@ -175,7 +136,7 @@ const rootSlice = createSlice({
     },
 });
 
-export const { fetchProfileStart, fetchProfileSuccess, fetchProfileFailure, fetchSurveyStart, fetchSurveySuccess, fetchSurveyFailure, updateSurvey, updateSurveyPoints, submitSurveyStart, submitSurveyFailure, submitSurveySuccess } = rootSlice.actions;
+export const { fetchProfileStart, fetchProfileSuccess, fetchProfileFailure, fetchSurveyStart, fetchSurveySuccess, fetchSurveyFailure, updateSurveyPoints, submitSurveyStart, submitSurveyFailure, submitSurveySuccess } = rootSlice.actions;
 
 export default rootSlice.reducer;
 

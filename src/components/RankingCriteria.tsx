@@ -13,19 +13,19 @@ import CheckboxInActive from "../../assets/images/checkbox-inactive.png";
 import { Answers } from "../redux/root/rootSlice";
 import { fonts } from "../constants/fonts";
 
-const CheckboxGrid = ({
+const RankingCriteria = ({
   data,
   selected,
   onChange,
 }: {
   data: Answers[];
-  selected: string;
+  selected: { id: number; answer: string }[];
   onChange: (answer: string, id: number) => void;
 }) => {
   return (
     <View style={styles.container}>
       {data.map((item, index) => {
-        const isSelected = selected === item?.answer;
+        const isSelected = selected.some((i) => i?.id === item?.id);
         return (
           <TouchableOpacity
             key={index}
@@ -68,4 +68,4 @@ const styles = StyleSheet.create({
     fontFamily: fonts.MulishRegular,
   },
 });
-export default CheckboxGrid;
+export default RankingCriteria;
