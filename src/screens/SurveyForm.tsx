@@ -258,7 +258,7 @@ function SurveyForm({
           value={refInputs?.current[item?.id] ?? ""}
           onChange={(value) => {
             const inputs = refInputs?.current;
-            inputs[item.id] = value;
+            inputs[item.id] = value.toString();
             setUpdate(!update);
           }}
         />
@@ -270,7 +270,7 @@ function SurveyForm({
           value={refInputs?.current[item?.id] ?? ""}
           onChange={(value) => {
             const inputs = refInputs?.current;
-            inputs[item.id] = value;
+            inputs[item.id] = value.toString();
             setUpdate(!update);
           }}
         />
@@ -531,7 +531,7 @@ function SurveyForm({
             city: "singapore",
             state: "singapore",
             country: "Singapore",
-            phone: "9824986961",
+            phone: "7203913164",
             email: user?.email,
           },
         },
