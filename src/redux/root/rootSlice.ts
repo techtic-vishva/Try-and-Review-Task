@@ -78,7 +78,7 @@ const initialState: RootStates = {
     user: null,
     isLoading: false,
     error: null,
-    surveyUIDs: ['650db838123a4', '610a238e664c2', '60e6d3395efbe', '63c03b1fa8931', '5f4cd14f75ec6', '5dfade14e1c05'],
+    surveyUIDs: ['651fddaf220bc4.21715590', '651fddb851fa47.37498351', '651fc3d0508511.84269239', '650db838123a4', '610a238e664c2', '60e6d3395efbe', '63c03b1fa8931', '5f4cd14f75ec6', '5dfade14e1c05'],
     surveys: [],
     surveyPoints: 0,
     isSurveySubmitted: false
@@ -108,10 +108,12 @@ const rootSlice = createSlice({
         submitSurveySuccess: (state, action: PayloadAction<boolean>) => {
             state.isLoading = false;
             state.isSurveySubmitted = action.payload;
+            state.error = null;
         },
         submitSurveyFailure: (state, action: PayloadAction<string>) => {
             state.isLoading = false;
             state.error = action.payload;
+            state.isSurveySubmitted = false;
         },
         fetchSurveyStart: (state) => {
             state.isLoading = true;
@@ -131,12 +133,19 @@ const rootSlice = createSlice({
             /* To update the survey points */
             state.surveyPoints += action.payload
         },
+        updateInitialState: (state) => {
+            state.error = null
+            state.isSurveySubmitted = false;
+            state.isLoading = false;
+
+
+        }
 
 
     },
 });
 
-export const { fetchProfileStart, fetchProfileSuccess, fetchProfileFailure, fetchSurveyStart, fetchSurveySuccess, fetchSurveyFailure, updateSurveyPoints, submitSurveyStart, submitSurveyFailure, submitSurveySuccess } = rootSlice.actions;
+export const { fetchProfileStart, fetchProfileSuccess, fetchProfileFailure, fetchSurveyStart, fetchSurveySuccess, fetchSurveyFailure, updateSurveyPoints, submitSurveyStart, submitSurveyFailure, submitSurveySuccess, updateInitialState } = rootSlice.actions;
 
 export default rootSlice.reducer;
 

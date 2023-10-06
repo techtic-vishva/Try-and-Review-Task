@@ -36,6 +36,7 @@ import {
   QuestionData,
   QuestionObject,
   selectRoot,
+  updateInitialState,
   updateSurveyPoints,
 } from "../redux/root/rootSlice";
 
@@ -100,6 +101,8 @@ function SurveyForm({
         <CustomInput
           defaultValue={refInputs?.current[item?.id] ?? ""}
           keyboardType="numeric"
+          returnKeyType="done"
+          blurOnSubmit={true}
           placeholder="Enter Number"
           inputContainer={{ backgroundColor: colors.backgroundInput }}
           onChangeText={(text) => {
@@ -544,10 +547,11 @@ function SurveyForm({
     if (isSurveySubmitted) {
       dispatch(updateSurveyPoints(EACH_SURVEY_POINT));
       navigation.navigate(Routes.Congratulation);
+      dispatch(updateInitialState());
     } else if (error) {
       showErrorMessage(error);
+      dispatch(updateInitialState());
     }
-    return;
   }, [isSurveySubmitted, error]);
 
   return (
