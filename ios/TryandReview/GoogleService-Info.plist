@@ -3,9 +3,9 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>496150315954-i5jc0lf7iko237qburohrdhlvuubvfgj.apps.googleusercontent.com</string>
+	<string>496150315954-rablp9tbjbvkb47mcinlk69j4adptdf3.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.496150315954-i5jc0lf7iko237qburohrdhlvuubvfgj</string>
+	<string>com.googleusercontent.apps.496150315954-rablp9tbjbvkb47mcinlk69j4adptdf3</string>
 	<key>ANDROID_CLIENT_ID</key>
 	<string>496150315954-gdpfs8vs1vi6mtbfdoaauigd21a00hu3.apps.googleusercontent.com</string>
 	<key>API_KEY</key>
@@ -15,7 +15,7 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.tryandreview</string>
+	<string>com.app.tryandreview</string>
 	<key>PROJECT_ID</key>
 	<string>tryandreview-285d1</string>
 	<key>STORAGE_BUCKET</key>
@@ -31,6 +31,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:496150315954:ios:ba71ed6c040d0928d3daab</string>
+	<string>1:496150315954:ios:0152927460d85eafd3daab</string>
 </dict>
 </plist>

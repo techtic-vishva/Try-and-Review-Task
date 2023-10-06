@@ -26,7 +26,7 @@
 		A72D4F109DBA40DF8CE146EA /* Mulish-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 039810D33EB34BD3B42CA027 /* Mulish-Regular.ttf */; };
 		ACDB59E953964146B3BECC2E /* Mulish-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 58A189093F5147F6ADF0BDD1 /* Mulish-Medium.ttf */; };
 		B2F5B90CAE9B4532A3A70DCD /* Mulish-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B36E1C556E374AEDAE58B80E /* Mulish-SemiBold.ttf */; };
-		B910A9922AD01E260077BCBB /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = B910A9912AD01E260077BCBB /* GoogleService-Info.plist */; };
+		B910A9942AD02E9F0077BCBB /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = B910A9932AD02E9F0077BCBB /* GoogleService-Info.plist */; };
 		DCDA1FBF6C64457DA9252442 /* Mulish-MediumItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 724C663643914761991D9889 /* Mulish-MediumItalic.ttf */; };
 		EA37A76501AB4E2386A56446 /* Mulish-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CE2CEAAD6F894704A05C15C5 /* Mulish-Bold.ttf */; };
 		F9A3935591364B3BB70DEDF1 /* Mulish-BlackItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A464F933A04D43F4B758F2E5 /* Mulish-BlackItalic.ttf */; };
@@ -72,7 +72,7 @@
 		89C6BE57DB24E9ADA2F236DE /* Pods-TryandReview-TryandReviewTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TryandReview-TryandReviewTests.release.xcconfig"; path = "Target Support Files/Pods-TryandReview-TryandReviewTests/Pods-TryandReview-TryandReviewTests.release.xcconfig"; sourceTree = "<group>"; };
 		A464F933A04D43F4B758F2E5 /* Mulish-BlackItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Mulish-BlackItalic.ttf"; path = "../assets/fonts/Mulish-BlackItalic.ttf"; sourceTree = "<group>"; };
 		B36E1C556E374AEDAE58B80E /* Mulish-SemiBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Mulish-SemiBold.ttf"; path = "../assets/fonts/Mulish-SemiBold.ttf"; sourceTree = "<group>"; };
-		B910A9912AD01E260077BCBB /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "TryandReview/GoogleService-Info.plist"; sourceTree = "<group>"; };
+		B910A9932AD02E9F0077BCBB /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "TryandReview/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		B9586A34C0B44A3785CB40BE /* Mulish-ExtraBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Mulish-ExtraBold.ttf"; path = "../assets/fonts/Mulish-ExtraBold.ttf"; sourceTree = "<group>"; };
 		BAA08379B96A4F5CA144A19C /* Mulish-ExtraBoldItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Mulish-ExtraBoldItalic.ttf"; path = "../assets/fonts/Mulish-ExtraBoldItalic.ttf"; sourceTree = "<group>"; };
 		BC19440E9B96485A89B41D0D /* Mulish-Light.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Mulish-Light.ttf"; path = "../assets/fonts/Mulish-Light.ttf"; sourceTree = "<group>"; };
@@ -120,7 +120,7 @@
 		13B07FAE1A68108700A75B9A /* TryandReview */ = {
 			isa = PBXGroup;
 			children = (
-				B910A9912AD01E260077BCBB /* GoogleService-Info.plist */,
+				B910A9932AD02E9F0077BCBB /* GoogleService-Info.plist */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.mm */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
@@ -312,7 +312,7 @@
 				FDFF1A70E4D648E499E6822F /* Mulish-ExtraLight.ttf in Resources */,
 				817FC37608504573954CE509 /* Mulish-ExtraLightItalic.ttf in Resources */,
 				A14554742F604EC9A5EA0AE6 /* Mulish-Italic.ttf in Resources */,
-				B910A9922AD01E260077BCBB /* GoogleService-Info.plist in Resources */,
+				B910A9942AD02E9F0077BCBB /* GoogleService-Info.plist in Resources */,
 				144DA586207C401EA347D051 /* Mulish-Light.ttf in Resources */,
 				6758D11008574CD090149AE1 /* Mulish-LightItalic.ttf in Resources */,
 				ACDB59E953964146B3BECC2E /* Mulish-Medium.ttf in Resources */,
